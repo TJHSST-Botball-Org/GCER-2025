@@ -153,7 +153,7 @@ void move_forward_until_black_line() {
 
         if (analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD && !(analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
             // Only left side on the black line. Move only the right side forward.
-            freeze(LEFT_TOPHAT_PORT)
+            freeze(LEFT_TOPHAT_PORT);
 
             move_at_velocity(
                 RIGHT_MOTOR_PORT,
@@ -166,7 +166,7 @@ void move_forward_until_black_line() {
                 1000
             );
 
-            freeze(RIGHT_TOPHAT_PORT)
+            freeze(RIGHT_TOPHAT_PORT);
         } else {
             /* Neither on the black line */
 
@@ -339,12 +339,12 @@ int main()
     turn(-1, 5, 90);
     wait_for_button();
 
-    p("Lower the arm")
+    p("Lower the arm");
     lower_arm();
     wait_for_button();
 
     p("Sweep 26.5 degrees counter clockwise to get the red pom");
-    turn(-1, 5, 26.5)
+    turn(-1, 5, 26.5);
     wait_for_button();
     
     p("Move forward 5 inches. This is so that we push the other poms further");
@@ -364,7 +364,7 @@ int main()
     turn(1, 5, 56.5);
     wait_for_button();
 
-    p("Adjust left and right position until good. THE REAR OF THE CHASSIS MUST BE 23.63 INCHES FROM THE BLACK TAPE")
+    p("Adjust left and right position until good. THE REAR OF THE CHASSIS MUST BE 23.63 INCHES FROM THE BLACK TAPE");
     move_linear(1.26, 5);
     wait_for_button();
 
@@ -372,13 +372,13 @@ int main()
     turn(1, 5, 90);
     wait_for_button();
 
-    p("Move towards the tray. PLEASE EDIT THIS NUMBER BASED ON WHAT IS NECESSARY")
+    p("Move towards the tray. PLEASE EDIT THIS NUMBER BASED ON WHAT IS NECESSARY");
     move_linear(9.7, 5);
     wait_for_button();
 
-    p("Drop the vertical poms")
-    half_lower_arm()
-    p("STOP. Draw a dot where the robot is right now. Figure out how much further the robot needs to move forward in order for the arm to be over the tray.")
+    p("Drop the vertical poms");
+    half_lower_arm();
+    p("STOP. Draw a dot where the robot is right now. Figure out how much further the robot needs to move forward in order for the arm to be over the tray.");
     wait_for_button();
 
     open_claw();
@@ -386,14 +386,14 @@ int main()
 
     raise_arm();
     close_claw();
-    p("STOP. Ensure that the right side of the chassis is 27.5 inches from the inside edge of the black tape. THIS MUST BE INCORRECT IN ORDER FOR FOLLOWING CODE TO WORK. Please edit the code on line 335-336 in order to fix this part.")
+    p("STOP. Ensure that the right side of the chassis is 27.5 inches from the inside edge of the black tape. THIS MUST BE INCORRECT IN ORDER FOR FOLLOWING CODE TO WORK. Please edit the code on line 335-336 in order to fix this part.");
     wait_for_button();
 
 
 
 
 
-    p("\n\n\n\nGetting the final pom set")
+    p("\n\n\n\nGetting the final pom set");
 
     p("Moving back 7.35 inches to get back on the center line. ");
     move_linear(-7.35, 5);
@@ -446,7 +446,7 @@ int main()
 
     p("Back up 7 inches.");
     move_linear(-7, 5);
-    p("STOP. Ensure that the rear of the chassis is 29 inches away from the black tape. If not, adjust the value above")
+    p("STOP. Ensure that the rear of the chassis is 29 inches away from the black tape. If not, adjust the value above");
     wait_for_button();
 
     p("Turn 90 degrees CW until facing towards the trays");
@@ -457,9 +457,9 @@ int main()
     move_linear(7.5, 5);
     wait_for_button();
 
-    p("Drop the last set poms poms")
-    half_lower_arm()
-    p("STOP. Draw a dot where the robot is right now. Figure out how much further the robot needs to move forward in order for the arm to be over the tray.")
+    p("Drop the last set poms poms");
+    half_lower_arm();
+    p("STOP. Draw a dot where the robot is right now. Figure out how much further the robot needs to move forward in order for the arm to be over the tray.");
     wait_for_button();
 
     open_claw();
@@ -474,7 +474,7 @@ int main()
     p("\n\n\n\n\nGetting the pickle.");
     
     p("Move back 13 inches");
-    p("The robot should be close to touching the north wall by now.")
+    p("The robot should be close to touching the north wall by now.");
     move_linear(-13, 5);
     wait_for_button();
 
@@ -494,7 +494,7 @@ int main()
     turn(-1, 5, 90);
     wait_for_button();
 
-    p("Move forward 2.5 inches until we can get the pickle.")
+    p("Move forward 2.5 inches until we can get the pickle.");
     move_linear(2.5, 5);
     wait_for_button();
 
@@ -524,7 +524,7 @@ int main()
     move_linear(-2.63, 5);
     wait_for_button();
 
-    p("Turn west")
+    p("Turn west");
     turn(-1, 5, 90);
     wait_for_button();
 
@@ -552,10 +552,10 @@ int main()
 
 
 
-    p("Getting the tomato")
+    p("Getting the tomato");
 
     p("Move back 12 inches");
-    p("The robot should be close to touching the north wall by now.")
+    p("The robot should be close to touching the north wall by now.");
     move_linear(-12, 5);
     wait_for_button();
 
@@ -590,13 +590,13 @@ int main()
     raise_arm();
     wait_for_button();
 
-    p("\nReverse the process.\n")
+    p("\nReverse the process.\n");
 
     p("Back up 2.63 inches so that we don't hit the north wall later");
     move_linear(-2.63, 5);
     wait_for_button();
 
-    p("Turn west")
+    p("Turn west");
     turn(-1, 5, 90);
     wait_for_button();
 
