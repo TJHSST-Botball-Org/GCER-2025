@@ -65,25 +65,6 @@ const float ARM_DOWN_CLOCKWISE_TURNING_ADJUSTMENT = 0.965; // Turn too much --> 
 const float ARM_DOWN_COUNTER_CLOCKWISE_TURNING_ADJUSTMENT = 0.96; // Turn too much --> decrease value
                                                       // Turn too little --> decrease value
 
-
-// PORTS
-const int ARM_PORT = 0;
-const int CLAW_PORT = 1;
-const int LEFT_MOTOR_PORT = 3;
-const int RIGHT_MOTOR_PORT = 0;
-const int LEFT_TOPHAT_PORT = 2;
-const int RIGHT_TOPHAT_PORT = 0;
-const int LEFT_TOPHAT_THRESHOLD = 3600;
-const int RIGHT_TOPHAT_THRESHOLD = 3600;
-
-// POSITIONS
-const int RAISED_POSITION = 660; //FIX THE NUMBER
-const int FULLY_RAISED = 600; 
-const int HALF_LOWERED = 1770;
-const int LOWERED_POSITION = 2020; //FIX THE NUMBER
-const int CLOSED_POSITION = 800; //FIX THE NUMBER
-const int OPEN_POSITION = 2047; //FIX THE NUMBER
-
 const double PI = 3.141592654;
                                             
 void slowly_set_servo_position(int pin, int position, int wait_delay_ms=10) {
@@ -160,18 +141,18 @@ void move_linear(float distance_in_inches, float speed_in_inches_per_sec) {
 
     move_at_velocity(
         LEFT_MOTOR_PORT, 
-        1000*(speed_in_inches_per_sec/5)*direction
+        1300*(speed_in_inches_per_sec/5)*direction
     );
 
     move_at_velocity(
         RIGHT_MOTOR_PORT,
-        1000*(speed_in_inches_per_sec/5)*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)*direction
+        1300*(speed_in_inches_per_sec/5)*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)*direction
     );
 
     if (direction == 1) 
-        msleep(1000*abs(distance_in_inches)*(is_arm_down ? ARM_DOWN_FORWARD_DISTANCE_ADJUSTMENT : FORWARD_DISTANCE_ADJUSTMENT));
+        msleep(1300*abs(distance_in_inches)*(is_arm_down ? ARM_DOWN_FORWARD_DISTANCE_ADJUSTMENT : FORWARD_DISTANCE_ADJUSTMENT));
     else
-        msleep(1000*abs(distance_in_inches)*(is_arm_down ? ARM_DOWN_BACKWARD_DISTANCE_ADJUSTMENT : BACKWARD_DISTANCE_ADJUSTMENT));
+        msleep(1300*abs(distance_in_inches)*(is_arm_down ? ARM_DOWN_BACKWARD_DISTANCE_ADJUSTMENT : BACKWARD_DISTANCE_ADJUSTMENT));
     
     stop();
 }
@@ -185,12 +166,12 @@ void move_forward_until_black_line() {
 
     move_at_velocity(
         LEFT_MOTOR_PORT, 
-        1000
+        1300
     );
 
     move_at_velocity(
         RIGHT_MOTOR_PORT,
-        1000*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
+        1300*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
     );
 
     while (!(analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD && analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
@@ -204,7 +185,7 @@ void move_forward_until_black_line() {
 
             move_at_velocity(
                 RIGHT_MOTOR_PORT,
-                1000*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
+                1300*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
             );
         } else if (!(analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD) && (analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
             p("Left white");    
@@ -212,7 +193,7 @@ void move_forward_until_black_line() {
             // Only right side on the black line. Move only the left side forward.
             move_at_velocity(
                 LEFT_MOTOR_PORT, 
-                1000
+                1300
             );
 
             freeze(RIGHT_TOPHAT_PORT);
@@ -221,12 +202,12 @@ void move_forward_until_black_line() {
             p("Both white");
             move_at_velocity(
                 LEFT_MOTOR_PORT, 
-                1000
+                1300
             );
 
             move_at_velocity(
                 RIGHT_MOTOR_PORT,
-                1000*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
+                1300*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
             );
         }
 
@@ -244,12 +225,12 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees) {
 
     move_at_velocity(
         LEFT_MOTOR_PORT, 
-        1000*direction
+        1300*direction
     );
 
     move_at_velocity(
         RIGHT_MOTOR_PORT,
-        1000*RIGHT_WHEEL_ADJUSTMENT*direction*-1
+        1300*RIGHT_WHEEL_ADJUSTMENT*direction*-1
     );
 
     if (direction == 1) 
@@ -260,8 +241,11 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees) {
     stop();
 }
 
+
 int main()
 {
+
+    /**  */
 
 
     /*wait_for_light(0);
