@@ -337,44 +337,55 @@ int main()
 
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board");
     turn(-1, 5, 90);
+    wait_for_button();
 
     p("Lower the arm")
     lower_arm();
+    wait_for_button();
 
     p("Sweep 26.5 degrees counter clockwise to get the red pom");
     turn(-1, 5, 26.5)
+    wait_for_button();
     
     p("Move forward 5 inches. This is so that we push the other poms further");
     move_linear(5, 5);
+    wait_for_button();
 
     p("Turn 30 degrees CCW to hit the yellow pom");
     turn(-1, 5, 30);    
+    wait_for_button();
 
     p("Grab all three poms.");
     close_claw();
     raise_arm();
+    wait_for_button();
 
     p("Turn CW until facing RIGHT. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
     turn(1, 5, 56.5);
+    wait_for_button();
 
     p("Adjust left and right position until good. THE REAR OF THE CHASSIS MUST BE 23.63 INCHES FROM THE BLACK TAPE")
     move_linear(1.26, 5);
+    wait_for_button();
 
     p("Turn CW until facing tray. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
     turn(1, 5, 90);
-
-    
+    wait_for_button();
 
     p("Move towards the tray. PLEASE EDIT THIS NUMBER BASED ON WHAT IS NECESSARY")
     move_linear(9.7, 5);
+    wait_for_button();
 
     p("Drop the vertical poms")
     half_lower_arm()
     p("STOP. Draw a dot where the robot is right now. Figure out how much further the robot needs to move forward in order for the arm to be over the tray.")
+    wait_for_button();
+
     open_claw();
+    wait_for_button();
+
     raise_arm();
     close_claw();
-
     p("STOP. Ensure that the right side of the chassis is 27.5 inches from the inside edge of the black tape. THIS MUST BE INCORRECT IN ORDER FOR FOLLOWING CODE TO WORK. Please edit the code on line 335-336 in order to fix this part.")
     wait_for_button();
 
@@ -386,9 +397,11 @@ int main()
 
     p("Moving back 7.35 inches to get back on the center line. ");
     move_linear(-7.35, 5);
+    wait_for_button();
 
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board. The right side chassis should be 2 inches south of the center line. If not, adjust the number on line 363");
     turn(-1, 5, 90);
+    wait_for_button();
 
     // We cannot go over the bump with the arm lowered, but if we go over the 
     // bump then start grabbing stuff then we would go too far.
@@ -398,42 +411,63 @@ int main()
 
     p("Move east for 1.36 inches so that we can reach the orange pom");
     move_linear(1.36, 5);
+    wait_for_button();
 
     p("Get the orange pom");
     open_claw();
     lower_arm();
+    wait_for_button();
+
     close_claw();
     raise_arm();
+    wait_for_button();
 
     p("Get over the bump. Move east for 3.83 inches");
     move_linear(3.83, 5);
+    wait_for_button();
 
     p("Drop orange pom, then continue moving");
     half_lower_arm();
+    wait_for_button();
+
     open_claw();
+    wait_for_button();
+
     lower_arm();
+    wait_for_button();
+
     move_linear(6.2, 5);
+    wait_for_button();
 
     p("Grab the poms.");
     close_claw();
     raise_arm();
+    wait_for_button();
 
-    p("Back up 6 inches.");
+    p("Back up 7 inches.");
     move_linear(-7, 5);
     p("STOP. Ensure that the rear of the chassis is 29 inches away from the black tape. If not, adjust the value above")
+    wait_for_button();
 
     p("Turn 90 degrees CW until facing towards the trays");
     turn(1, 5, 90);
+    wait_for_button();
 
     p("Move towards the trays");
     move_linear(7.5, 5);
+    wait_for_button();
 
     p("Drop the last set poms poms")
     half_lower_arm()
     p("STOP. Draw a dot where the robot is right now. Figure out how much further the robot needs to move forward in order for the arm to be over the tray.")
+    wait_for_button();
+
     open_claw();
+    wait_for_button();
+
     raise_arm();
     close_claw();
+    wait_for_button();
 
 
 
@@ -442,30 +476,41 @@ int main()
     p("Move back 13 inches");
     p("The robot should be close to touching the north wall by now.")
     move_linear(-13, 5);
+    wait_for_button();
 
     p("Rotate to face east.");
     turn(-1, 5, 90);
+    wait_for_button();
 
     p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
     move_forward_until_black_line();
+    wait_for_button();
 
     p("Move forward 5.7 inches so that we align with the pickle");
     move_linear(5.7, 5);
+    wait_for_button();
 
     p("Turn towards north.");
     turn(-1, 5, 90);
+    wait_for_button();
 
     p("Move forward 2.5 inches until we can get the pickle.")
     move_linear(2.5, 5);
+    wait_for_button();
 
     p("Get the pickle");
     open_claw();
+    wait_for_button();
+
     lower_arm();
     p("STOP. Is the claw aligned? How much more do we need to move?");
-    
+    wait_for_button();
+
     close_claw();
+    wait_for_button();
 
     raise_arm();
+    wait_for_button();
 
     // The plan now is to
     // 1. Back up 2.63 inches so that we don't hit the north wall when we rotate later
@@ -477,25 +522,31 @@ int main()
     
     p("Back up 2.63 inches so that we don't hit the north wall later");
     move_linear(-2.63, 5);
+    wait_for_button();
 
     p("Turn west")
     turn(-1, 5, 90);
+    wait_for_button();
 
     p("Go forward, line up with the black line");
     move_forward_until_black_line();
+    wait_for_button();
 
     p("Move back 1.45 inches because we gone too far");
     move_linear(-1.45, 5);
+    wait_for_button();
 
     p("Turn south. Drop off the pickle");
     turn(-1, 5, 90);
+    wait_for_button();
 
     move_linear(12, 5); // What line 454 should be.
     half_lower_arm();
-
     p("STOP. Is the arm at the right place? If not, please change the distance on line 454, above.");
+    wait_for_button();
 
     open_claw();
+    wait_for_button();
 
 
 
@@ -506,50 +557,66 @@ int main()
     p("Move back 12 inches");
     p("The robot should be close to touching the north wall by now.")
     move_linear(-12, 5);
+    wait_for_button();
 
     p("Rotate to face east.");
     turn(-1, 5, 90);
+    wait_for_button();
 
     p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
     move_forward_until_black_line();
+    wait_for_button();
     
     p("Move an extra 1.61 inches to align on the east-west axis with the tomato.");
     move_linear(1.61, 5);
-
+    wait_for_button();
+    
     p("Turn north");
     turn(-1, 5, 90);
+    wait_for_button();
 
     p("Move forward 2.5 inches to align with north-south axis");
     move_linear(2.5, 5);
+    wait_for_button();
 
     p("Get the tomato");
     lower_arm();
     p("STOP. Is the arm aligned? Adjust values so that it is. Claw cannot touch PVC. Right side of claw must be around right side of tomato.");
-    close_claw();
-    raise_arm();
+    wait_for_button();
 
-    p("Reverse the process.")
+    close_claw();
+    wait_for_button();
+
+    raise_arm();
+    wait_for_button();
+
+    p("\nReverse the process.\n")
 
     p("Back up 2.63 inches so that we don't hit the north wall later");
     move_linear(-2.63, 5);
+    wait_for_button();
 
     p("Turn west")
     turn(-1, 5, 90);
+    wait_for_button();
 
     p("Go forward, line up with the black line");
     move_forward_until_black_line();
+    wait_for_button();
 
     p("Go forward 4.22 inches to align on the east-west axis");
     move_linear(4.22, 5);
+    wait_for_button();
 
 
     p("Turn south. Drop off the tomato");
     turn(-1, 5, 90);
+    wait_for_button();
 
     move_linear(12, 5); // What line 454 should be.
     half_lower_arm();
-
     p("STOP. Is the arm at the right place? If not, please change the distance on line 454, above.");
+    wait_for_button();
 
     open_claw();
 
