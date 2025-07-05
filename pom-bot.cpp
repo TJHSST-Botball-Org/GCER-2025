@@ -157,7 +157,9 @@ void move_linear(float distance_in_inches, float speed_in_inches_per_sec) {
     stop();
 }
 
-void turn(float direction, float speed_in_inches_per_sec, float degrees) { //direction is 1 or -1, 1 for clockwise, -1 for counter-c
+void turn(float direction, float speed_in_inches_per_sec, float degrees) { 
+    /* Direction is 1 or -1, 1 for clockwise, -1 for counter-c */
+
     cmpc(LEFT_MOTOR_PORT);
     cmpc(RIGHT_MOTOR_PORT);
 
@@ -244,9 +246,11 @@ int main()
     // Slide 9
     p("Slide 9");
     move_linear(29,5);
+    wait_for_button();
 
     p("Backing up 4 inches because the pile of poms is too far back.");
     move_linear(-2, 5);
+    wait_for_button();
 
     
     
@@ -255,6 +259,7 @@ int main()
     p("Picking up the first set of poms");
     close_claw();
     raise_arm();
+    wait_for_button();
     
     
     
@@ -262,6 +267,7 @@ int main()
     p("Slide 11");
     p("Move forward a bit to line up with the trays");
     move_linear(6,5);
+    wait_for_button();
     
     
    
@@ -274,15 +280,18 @@ int main()
     
     // Slide 13
 	p("Slide 13");
-    p("Move toward the trays");
-    move_linear(6.5,5);
+    p("First set: Move toward the trays");
+    move_linear(7.5,5);
+    wait_for_button();
     
     
     // Slide 14
     p("Slide 14");
     p("Dropping the poms");
     half_lower_arm();
+    wait_for_button();
     open_claw();
+    wait_for_button();
     
       //Slide 17
     p("Slide 17");
@@ -290,462 +299,224 @@ int main()
     raise_arm();
     close_claw();
 
+
+
+
+    p("\n\n\n\nGetting the second set of poms, vertical.");
+
+    p("Moving back 7.5 inches to get back on the center line.");
+    move_linear(-7.5, 5);
+
+    p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board");
+    turn(-1, 5, 90);
+
+    p("Lower the arm")
+    lower_arm();
+
+    p("Sweep 22.5 degrees counter clockwise to get the red pom");
+    turn(-1, 5, 22.5)
     
+    p("Move forward 5.3 inches. This is so that we push the other poms further");
+    move_linear(5.3, 5);
+
+    p("STOP. Draw a dot where the robot is right now. Figure out how much more back the robot needs to move in order to get all three poms")
+
+    p("Move back 3 inches. This hopefully will get the functional part of the claw able to reach the yellow and orange poms")
+    p("PLEASE EDIT THIS NUMBER BASED ON HOW MUCH IS REQUIRED")
+    move_linear(-3, 5);
+
+    p("Grab all three poms.");
+    close_claw();
+    raise_arm();
+
+    p("Turn CW until facing RIGHT. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
+    turn(1, 5, 22.5);
+
+    p("Adjust left and right position until good. THE REAR OF THE CHASSIS MUST BE 23.63 INCHES FROM THE BLACK TAPE")
+    move_linear(0, 5);
+
+    p("Turn CW until facing tray. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
+    turn(1, 5, 90);
+
     
-    p("Unit 3");
-    //wait_for_button()();
-    
-    
-    
+
+    p("Move towards the tray. PLEASE EDIT THIS NUMBER BASED ON WHAT IS NECESSARY")
+    move_linear(0, 5);
+
+    p("Drop the vertical poms")
+    half_lower_arm()
+    p("STOP. Draw a dot where the robot is right now. Figure out how much further the robot needs to move forward in order for the arm to be over the tray.")
+    open_claw();
+    raise_arm();
+    close_claw();
+
+    p("STOP. Ensure that the right side of the chassis is 27.5 inches from the inside edge of the black tape. THIS MUST BE INCORRECT IN ORDER FOR FOLLOWING CODE TO WORK. Please edit the code on line 335-336 in order to fix this part.")
+    wait_for_button();
 
 
 
 
 
+    p("\n\n\n\nGetting the final pom set")
 
-    // UNIT 3 
-    //Slide 18
-    p("Slide 18");
-    move_linear(-3,5);
-    //wait_for_button()();
+    p("Moving back 7.35 inches to get back on the center line. ");
+    move_linear(-7.35, 5);
 
-    //Slide 19
-    p("Slide 19");
-    turn(-1,5,90);
-    move_linear(-3,5);
-    //wait_for_button()();
-    //Slide 20
-    p("Slide 20");
-    move_linear(2.5,5); 
-    //wait_for_button()();
+    p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board. The right side chassis should be 2 inches south of the center line. If not, adjust the number on line 363");
+    turn(-1, 5, 90);
 
-    //Slide 21
-    p("Slide 21");
+    p("Move east for 3.6 inches so that we can sort of get over the bump");
+    move_linear(3.6, 5);
+
+    p("Open claw, lower arm");
     open_claw();
     lower_arm();
-    //wait_for_button()();
-    
-    //Slide 22
-    p("Slide 22");
-    turn(-1,5,45);
-    //wait_for_button()();
-    
-    //Slide 23
-    p("Slide 23");
-    move_linear(2.3,5);
-//wait_for_button()();
-    //Slide 24
-    p("Slide 24");
-    turn(-1,5,25);
-    //move_linear(6, X); //FIX THE NUMBER
-    
-    move_linear(2,5);
-//wait_for_button()();
-    //Slide 25
-    p("Slide 25");
+
+    p("Move forward 8.7 inches so that everything gets pushed together");
+    move_linear(8.7, 5);
+
+    p("Back up 2 inches so that we can grab everything");
+    move_linear(-2, 5);
+
+    p("Grab the last set");
     close_claw();
     raise_arm();
-//wait_for_button()();
-    
-    //Slide 26
-    p("Slide 26. Turning towards the tray to drop off the vertical set of poms");
-    turn(1,5,45);
-    move_linear(3.5,5);
-    turn(1,5,90);
-    
-    
-    //wait_for_button()();
-    //Slide 27
-    p("Slide 27");
-    move_linear(9,5); // DROPPING THE VERTICAL SET OF POMS
-    move_linear(-2,5);
-    //wait_for_button()();
 
-    //Slide 28
-    p("Slide 28");
-    half_lower_arm();
+    p("Back up 7 inches.");
+    move_linear(-7, 5);
+    p("STOP. Ensure that the rear of the chassis is 29 inches away from the black tape. If not, adjust the value above")
+
+    p("Turn 90 degrees CW until facing towards the trays");
+    turn(1, 5, 90);
+
+    p("Move towards the trays");
+    move_linear(6.94, 5);
+
+    p("Drop the last set poms poms")
+    half_lower_arm()
+    p("STOP. Draw a dot where the robot is right now. Figure out how much further the robot needs to move forward in order for the arm to be over the tray.")
     open_claw();
-
-    
-    
-    // GETTING THE PICKLES
-
-    
-    
-    move_linear(-8.5,5);
     raise_arm();
-    
-    close_claw();
-    
-    p("We are turning to get to the pickles"); 
-   turn(-1,5,90);
-    
-    move_linear(9,5);
-    
-    turn(-1,5,90);
-    
-    // BACK UP AND RAM INTO THE WALL
-    move_linear(-3,5);
-    
-    move_linear(13,5);
-    
-    move_linear(-1.75,5);
-    
-    
-    for(int servoPos = get_servo_position(ARM_PORT); servoPos>450; servoPos-=3){
-        set_servo_position(ARM_PORT, servoPos);
-        msleep(1);
-    }
-    msleep(1000);
-    set_servo_position(CLAW_PORT, 1300);
-    msleep(1000);
-    lower_arm();
-    msleep(500);
-    close_claw();
-    raise_arm();
-    
-    
-    // DROP OFF THE PICKLE
-    
-    // Move forward a bit so that we can align
-    move_linear(3,5);
-    turn(-1,5,90);
-    msleep(7000);
-    
-   
-    move_linear(7.5,5);
-    
-    turn(-1,5,90);
-
-    // Move forward towards the trays
-    move_linear(11,5);
-    move_linear(-2,5);
-    
-    // Drop the pickle
-    half_lower_arm();
-    open_claw();
-
-    move_linear(2.1,5);
-
-    // Wait for the other robot.
-    msleep(13000);
-
-
-    /* GET THE THIRD POM SET */
-
-    raise_arm();
-
     close_claw();
 
-    // Back up away from the trays
-    move_linear(-5.5,5);
 
+
+    p("\n\n\n\n\nGetting the pickle.");
     
+    p("Move back 13 inches");
+    p("The robot should be close to touching the north wall by now.")
+    move_linear(-13, 5);
 
-    // Turn towards the third pom set.
-    turn(-1,5,90);
+    p("Rotate to face east.");
+    turn(-1, 5, 90);
 
-    // Move towards the third pom set.
-    move_linear(11,5);
-    
+    p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
+    // TODO
+
+    p("Move forward 5.7 inches so that we align with the pickle");
+    move_linear(5.7, 5);
+
+    p("Turn towards north.");
+    turn(-1, 5, 90);
+
+    p("Move forward 2.5 inches until we can get the pickle.")
+    move_linear(2.5, 5);
+
+    p("Get the pickle");
     open_claw();
     lower_arm();
+    p("STOP. Is the claw aligned? How much more do we need to move?");
     
-    move_linear(4,5);
-    move_linear(-2,5);
+    close_claw();
 
-    // Grab the poms.
+    raise_arm();
+
+    // The plan now is to
+    // 1. Back up 2.63 inches so that we don't hit the north wall when we rotate later
+    // 1. move west,
+    // 2. Get over the bump
+    // 3. line up with the black line
+    // 4. Move back a bit because the line is too far
+    // 5. Turn south, drop it off
+    
+    p("Back up 2.63 inches so that we don't hit the north wall later");
+    move_linear(-2.63, 5);
+
+    p("Turn west")
+    turn(-1, 5, 90);
+
+    p("Go forward, line up with the black line");
+    // TODO
+
+    p("Move back 1.45 inches because we gone too far");
+    move_linear(-1.45, 5);
+
+    p("Turn south. Drop off the pickle");
+    turn(-1, 5, 90);
+
+    move_linear(12, 5); // What line 454 should be.
+    half_lower_arm();
+
+    p("STOP. Is the arm at the right place? If not, please change the distance on line 454, above.");
+
     open_claw();
+
+
+
+
+
+    p("Getting the tomato")
+
+    p("Move back 12 inches");
+    p("The robot should be close to touching the north wall by now.")
+    move_linear(-12, 5);
+
+    p("Rotate to face east.");
+    turn(-1, 5, 90);
+
+    p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
+    // TODO
+    
+    p("Move an extra 1.61 inches to align on the east-west axis with the tomato.");
+    move_linear(1.61, 5);
+
+    p("Turn north");
+    turn(-1, 5, 90);
+
+    p("Move forward 2.5 inches to align with north-south axis");
+    move_linear(2.5, 5);
+
+    p("Get the tomato");
+    lower_arm();
+    p("STOP. Is the arm aligned? Adjust values so that it is. Claw cannot touch PVC. Right side of claw must be around right side of tomato.");
     close_claw();
     raise_arm();
 
+    p("Reverse the process.")
+
+    p("Back up 2.63 inches so that we don't hit the north wall later");
+    move_linear(-2.63, 5);
+
+    p("Turn west")
+    turn(-1, 5, 90);
+
+    p("Go forward, line up with the black line");
+    // TODO
+
+    p("Go forward 4.22 inches to align on the east-west axis");
+    move_linear(4.22, 5);
 
 
+    p("Turn south. Drop off the tomato");
+    turn(-1, 5, 90);
 
-    /* PUT THE LAST POM SET IN THE THIRD TRAY. */
-
-    // Back up. This is moving left.
-    move_linear(-8,5);
-    
-    // Turn towards the trays, then move towards them.
-    turn(1,5,90);
-    move_linear(8.5,5);
-    move_linear(-3.5,5);
-
-    // Drop the poms.
+    move_linear(12, 5); // What line 454 should be.
     half_lower_arm();
+
+    p("STOP. Is the arm at the right place? If not, please change the distance on line 454, above.");
+
     open_claw();
 
-
-    
     return 0;
-  
-    
-    // UNIT 5: GETTING THE PICKLE
-    
-    p("Slide 37. Move claw to 1300. This makes the claw as small as possible so it doesn't bump into anything but also wide enough to not hit the pickle.");
-    set_servo_position(CLAW_PORT, 1300);
-    msleep(1000);
-   
-    
-    p("Slide 32. Turn around right wheel -90 degrees");
-    turn(1,5,90);
-    //wait_for_button();
-    
-    p("Slide 33. Back up 6 inches. This is uh towards the right side.");
-   	move_linear(-9,5);
-    //wait_for_button();
-    
-    p("Slide 34. Turn around right wheel -90 degrees so that we are facing the pickle");
-   	turn(1,5,90);
-    //wait_for_button();
-    
-    p("Slide 35. Move forward until bump into wall. Then back up.");
-   	move_linear(4,5);
-    move_linear(-2,5);
-    //wait_for_button();
-    
-    p("Slide 38. Lower arm");
-    lower_arm();
-    set_servo_position(ARM_PORT, 0);
-    msleep(500);
-    
-    p("Slide 39. Close claw. Raise arm. Back out.");
-    close_claw();
-    raise_arm();
-    move_linear(-5,5);
-    
-    p("Slide 40. Turn around -90 degrees around the right wheel");
-    turn(-1,5,90);
-    
-    p("Slide 41. Move forward 4.5 inches.");
-    move_linear(4.5,5);
-    
-    p("Slide 42. Turn around left wheel -90 degrees.");
-    turn(-1,5,90);
-    
-    p("Slide 43. Move forward so that the pickle is over the trays");
-    move_linear(3,5);
-    
-    p("Slide 44. Drop the pickle.");
-    half_lower_arm();
-    open_claw();
-    
-    // TOMATO
-    
-    p("Back up towards the tomato so that we are aligned.");
-    move_linear(-12,5);
-    
-    
-    //return 0;
-    
-    
-
-    // BLOCK OF CODE THAT GRABS AND THEN PLACES THE PICKEL
-    
-  //wait_for_button();
-    raise_arm();
-     //wait_for_button();
-    close_claw();
-      // wait_for_button();
-    
-    move_linear(-8,5);
-       //wait_for_button();
-    turn(1,5,90);
-      wait_for_button();
-    move_linear(-2.5,5);
-       //wait_for_button();
-    turn(1,5,90);
-       //wait_for_button();
-    set_servo_position(ARM_PORT, 400);
-    msleep(1000);
-       //wait_for_button();
-	move_linear(3,5);
-       //wait_for_button();
-    move_linear(-2,5);
-       //wait_for_button();
-    set_servo_position(CLAW_PORT, 600);
-    msleep(1000);
-       //wait_for_button();
-    lower_arm();
-       //wait_for_button();
-    close_claw();
-    
-    p("RAISING ARM");
-    raise_arm();
-    p("OOK");
-    
-   
-	turn(-1,5,90);
-    move_linear(7.5,5);
-    turn(-1,5,90);
-    move_linear(7.5,5);
-    half_lower_arm();
-    open_claw();
-    
-    // dropped pickle
-    p("dropped pickle");
-    
-    
-    // BLOCK OF CODE THAT GETS THE TOMATO
-    
-    //wait_for_button();
-    raise_arm();
-     //wait_for_button();
-    close_claw();
-      // wait_for_button();
-    
-    move_linear(-8,5);
-       //wait_for_button();
-    turn(1,5,90);
-      // wait_for_button();
-    move_linear(-2.5,5);
-       //wait_for_button();
-    turn(1,5,90);
-       //wait_for_button();
-    set_servo_position(ARM_PORT, 400);
-    msleep(1000);
-       //wait_for_button();
-	move_linear(3,5);
-       //wait_for_button();
-    move_linear(-4,5);
-       //wait_for_button();
-    set_servo_position(CLAW_PORT, 600);
-    msleep(1000);
-       //wait_for_button();
-    lower_arm();
-       //wait_for_button();
-    close_claw();
-    
-    p("RAISING ARM");
-    raise_arm();
-    p("OOK");
-   
-	turn(-1,5,90);
-    move_linear(7.5,5);
-    turn(-1,5,90);
-    move_linear(7.5,5);
-    half_lower_arm();
-    open_claw();
-    
-    
-    //return 0;
-    
-    
-    p("unit 5");
-    // UNIT 5
-    
-    close_claw();
-    raise_arm();
-    move_linear(-11.3,5);
-    
-    turn(1,5,95);
-    
-    move_linear(26.5,5);
-    turn(-1,5,180);
-    
-    //wait_for_button()();
-    turn(1,5,5);
-    open_claw();
-    lower_arm();
-    
-    move_linear(5,5);
-    
-    /*
-    
-   	// UNIT 3 
-    
-    //wait_for_button()();
-    // Slide 16
-    p("Slide 16");
-    raise_arm();
-    
-    //wait_for_button()();
-    //Slide 17
-    p("Slide 17");
-    move_linear(6, -6.5);
-	
-    //wait_for_button()();
-    //Slide 18
-    p("Slide 18");
-    turn(-1,5,90);
-	    
-    //wait_for_button()();
-    //Slide 19
-    p("Slide 19");
-    move_linear(6, -3);
-    
-    //wait_for_button()();
-    // Slide 20
-    p("Slide 20");
-    lower_arm();
-    close_claw();
-    
-    //wait_for_button()();
-    // Slide 21
-    p("Slide 21");
-    raise_arm();
-    
-    //wait_for_button()();
-    // Slide 22
-    p("Slide 22");
-    move_linear(6, 13.75, 0);
-    
-    //wait_for_button()();
-    // Slide 23
-    p("Slide 23");
-    turn(-1,5,90);
-    
-    
-    
-    return 0;
-    
-    //wait_for_button()();
-    // Slide 20
-    p("Slide 20");
-    lower_arm();
-    
-    //wait_for_button()();
-    // Slide 21
-    p("Slide 21");
-    
-    return 0;
-    
-    
-    
-    //Slide 20
-    p("Slide 20");
-    move_linear(6, X); //FIX THE NUMBER
-
-    //Slide 21
-    p("Slide 21");
-    turn(1,5,90);
-    
-    //Slide 22
-    p("Slide 22");
-    close_claw();
-    
-    //Slide 23
-    p("Slide 23");
-    turn(-1,5,90);
-
-    //Slide 24
-    p("Slide 24");
-    move_linear(6, X); //FIX THE NUMBER
-
-    //Slide 25
-    p("Slide 25");
-    turn(1,5,90);
-
-    //Slide 26
-    p("Slide 26");
-    move_linear(6, X); //FIX THE NUMBER
-    lower_arm();
-    
-    //Slide 27
-    p("Slide 27");
-    open_claw();
-   
-*/
     
 }
