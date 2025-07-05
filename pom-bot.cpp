@@ -341,27 +341,24 @@ int main()
     p("Lower the arm")
     lower_arm();
 
-    p("Sweep 22.5 degrees counter clockwise to get the red pom");
-    turn(-1, 5, 22.5)
+    p("Sweep 26.5 degrees counter clockwise to get the red pom");
+    turn(-1, 5, 26.5)
     
-    p("Move forward 5.3 inches. This is so that we push the other poms further");
-    move_linear(5.3, 5);
+    p("Move forward 5 inches. This is so that we push the other poms further");
+    move_linear(5, 5);
 
-    p("STOP. Draw a dot where the robot is right now. Figure out how much more back the robot needs to move in order to get all three poms")
-
-    p("Move back 3 inches. This hopefully will get the functional part of the claw able to reach the yellow and orange poms")
-    p("PLEASE EDIT THIS NUMBER BASED ON HOW MUCH IS REQUIRED")
-    move_linear(-3, 5);
+    p("Turn 30 degrees CCW to hit the yellow pom");
+    turn(-1, 5, 30);    
 
     p("Grab all three poms.");
     close_claw();
     raise_arm();
 
     p("Turn CW until facing RIGHT. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
-    turn(1, 5, 22.5);
+    turn(1, 5, 56.5);
 
     p("Adjust left and right position until good. THE REAR OF THE CHASSIS MUST BE 23.63 INCHES FROM THE BLACK TAPE")
-    move_linear(0, 5);
+    move_linear(1.26, 5);
 
     p("Turn CW until facing tray. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
     turn(1, 5, 90);
@@ -369,7 +366,7 @@ int main()
     
 
     p("Move towards the tray. PLEASE EDIT THIS NUMBER BASED ON WHAT IS NECESSARY")
-    move_linear(0, 5);
+    move_linear(9.7, 5);
 
     p("Drop the vertical poms")
     half_lower_arm()
@@ -393,24 +390,35 @@ int main()
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board. The right side chassis should be 2 inches south of the center line. If not, adjust the number on line 363");
     turn(-1, 5, 90);
 
-    p("Move east for 3.6 inches so that we can sort of get over the bump");
-    move_linear(3.6, 5);
+    // We cannot go over the bump with the arm lowered, but if we go over the 
+    // bump then start grabbing stuff then we would go too far.
+    // We will first pickup the orange pom, go over the bump, drop it, and then
+    // Get the rest.
 
-    p("Open claw, lower arm");
+
+    p("Move east for 1.36 inches so that we can reach the orange pom");
+    move_linear(1.36, 5);
+
+    p("Get the orange pom");
     open_claw();
     lower_arm();
-
-    p("Move forward 8.7 inches so that everything gets pushed together");
-    move_linear(8.7, 5);
-
-    p("Back up 2 inches so that we can grab everything");
-    move_linear(-2, 5);
-
-    p("Grab the last set");
     close_claw();
     raise_arm();
 
-    p("Back up 7 inches.");
+    p("Get over the bump. Move east for 3.83 inches");
+    move_linear(3.83, 5);
+
+    p("Drop orange pom, then continue moving");
+    half_lower_arm();
+    open_claw();
+    lower_arm();
+    move_linear(6.2, 5);
+
+    p("Grab the poms.");
+    close_claw();
+    raise_arm();
+
+    p("Back up 6 inches.");
     move_linear(-7, 5);
     p("STOP. Ensure that the rear of the chassis is 29 inches away from the black tape. If not, adjust the value above")
 
@@ -418,7 +426,7 @@ int main()
     turn(1, 5, 90);
 
     p("Move towards the trays");
-    move_linear(6.94, 5);
+    move_linear(7.5, 5);
 
     p("Drop the last set poms poms")
     half_lower_arm()
