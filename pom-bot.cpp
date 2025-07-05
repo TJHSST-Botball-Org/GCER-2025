@@ -1,18 +1,32 @@
 #include <kipr/kipr.h>
 #include <iostream>
 
+bool is_arm_down = false;
+
 // WHEEL ADJUSTMENTS
 
 // Making it go straight:
-const float RIGHT_WHEEL_ADJUSTMENT = 0.875; // Veering to left? Pull right side back, decrease value
+const float RIGHT_WHEEL_ADJUSTMENT = 0.87; // Veering to left? Pull right side back, decrease value
                                                   // Veering to right? Push right side forward, increase value
 
+const float ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT = 0.86;
+
 // Making it go the right distance
-const float FORWARD_DISTANCE_ADJUSTMENT = 0.222222222; // Make robot move 5 inches.
+const float FORWARD_DISTANCE_ADJUSTMENT = 0.227920228; // Make robot move 5 inches.
                                              // If not enough distance, increase this value
                                              // If too much, decrease this value
 
-const float BACKWARD_DISTANCE_ADJUSTMENT = 0.222222222; // Make robot move 5 inches.
+const float BACKWARD_DISTANCE_ADJUSTMENT = 0.227920228; // Make robot move 5 inches.
+                                              // If not enough distance, increase this value
+                                              // If too much, decrease this value
+
+
+// Making it go the right distance when the claw is down
+const float ARM_DOWN_FORWARD_DISTANCE_ADJUSTMENT = 0.233918128; // Make robot move 5 inches.
+                                             // If not enough distance, increase this value
+                                             // If too much, decrease this value
+
+const float ARM_DOWN_BACKWARD_DISTANCE_ADJUSTMENT = 0.233918128; // Make robot move 5 inches.
                                               // If not enough distance, increase this value
                                               // If too much, decrease this value
 
@@ -24,28 +38,36 @@ const float CLOCKWISE_TURNING_ADJUSTMENT = 1; // Turn too much --> decrease valu
 const float COUNTER_CLOCKWISE_TURNING_ADJUSTMENT = 1.03; // Turn too much --> decrease value
                                                       // Turn too little --> decrease value
 
+// Making it turn the right amount
+// Make the robot turn 90 degrees. Adjust values accordingly
+const float ARM_DOWN_CLOCKWISE_TURNING_ADJUSTMENT = 0.965; // Turn too much --> decrease value
+                                              // Turn too little --> decrease value
+
+const float ARM_DOWN_COUNTER_CLOCKWISE_TURNING_ADJUSTMENT = 0.96; // Turn too much --> decrease value
+                                                      // Turn too little --> decrease value
+
 
 // PORTS
 const int ARM_PORT = 0;
 const int CLAW_PORT = 1;
 const int LEFT_MOTOR_PORT = 3;
 const int RIGHT_MOTOR_PORT = 0;
-const int LEFT_TOPHAT_PORT = 0;
+const int LEFT_TOPHAT_PORT = 2;
 const int RIGHT_TOPHAT_PORT = 0;
-const int LEFT_TOPHAT_THRESHOLD = 3000;
-const int RIGHT_TOPHAT_THRESHOLD = 3000;
+const int LEFT_TOPHAT_THRESHOLD = 3600;
+const int RIGHT_TOPHAT_THRESHOLD = 3600;
 
 // POSITIONS
 const int RAISED_POSITION = 660; //FIX THE NUMBER
 const int FULLY_RAISED = 600; 
-const int HALF_LOWERED = 1400;
+const int HALF_LOWERED = 1770;
 const int LOWERED_POSITION = 2020; //FIX THE NUMBER
 const int CLOSED_POSITION = 800; //FIX THE NUMBER
 const int OPEN_POSITION = 2047; //FIX THE NUMBER
 
 const double PI = 3.141592654;
                                             
-void slowly_set_servo_position(int pin, int position, int wait_delay_ms=5) {
+void slowly_set_servo_position(int pin, int position, int wait_delay_ms=10) {
     int initial_pos = get_servo_position(pin);
 
     while (initial_pos > position ? get_servo_position(pin) > position : get_servo_position(pin) < position) {
@@ -56,22 +78,26 @@ void slowly_set_servo_position(int pin, int position, int wait_delay_ms=5) {
 
 void raise_arm()
 {
+    is_arm_down = false;
     slowly_set_servo_position(ARM_PORT, RAISED_POSITION);
 }
 
 void fully_raise_arm()
 {
+    is_arm_down = false;
     slowly_set_servo_position(ARM_PORT, FULLY_RAISED);
 }
 
 
 void half_lower_arm()
 {
+    is_arm_down = false;
     slowly_set_servo_position(ARM_PORT, HALF_LOWERED);
 }
 
 void lower_arm()
 {
+    is_arm_down = true;
     slowly_set_servo_position(ARM_PORT, LOWERED_POSITION);
 }
 
@@ -120,13 +146,13 @@ void move_linear(float distance_in_inches, float speed_in_inches_per_sec) {
 
     move_at_velocity(
         RIGHT_MOTOR_PORT,
-        1000*(speed_in_inches_per_sec/5)*RIGHT_WHEEL_ADJUSTMENT*direction
+        1000*(speed_in_inches_per_sec/5)*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)*direction
     );
 
     if (direction == 1) 
-        msleep(1000*abs(distance_in_inches)*FORWARD_DISTANCE_ADJUSTMENT);
+        msleep(1000*abs(distance_in_inches)*(is_arm_down ? ARM_DOWN_FORWARD_DISTANCE_ADJUSTMENT : FORWARD_DISTANCE_ADJUSTMENT));
     else
-        msleep(1000*abs(distance_in_inches)*BACKWARD_DISTANCE_ADJUSTMENT);
+        msleep(1000*abs(distance_in_inches)*(is_arm_down ? ARM_DOWN_BACKWARD_DISTANCE_ADJUSTMENT : BACKWARD_DISTANCE_ADJUSTMENT));
     
     stop();
 }
@@ -145,31 +171,35 @@ void move_forward_until_black_line() {
 
     move_at_velocity(
         RIGHT_MOTOR_PORT,
-        1000*RIGHT_WHEEL_ADJUSTMENT
+        1000*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
     );
 
     while (!(analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD && analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
         // While not BOTH on black line
 
         if (analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD && !(analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
+            p("Right white");
+            
             // Only left side on the black line. Move only the right side forward.
-            freeze(LEFT_TOPHAT_PORT);
+            freeze(LEFT_MOTOR_PORT);
 
             move_at_velocity(
                 RIGHT_MOTOR_PORT,
-                1000*RIGHT_WHEEL_ADJUSTMENT
+                1000*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
             );
         } else if (!(analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD) && (analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
+            p("Left white");    
+
             // Only right side on the black line. Move only the left side forward.
             move_at_velocity(
-                LEFT_MOTOR_PORT,
+                LEFT_MOTOR_PORT, 
                 1000
             );
 
             freeze(RIGHT_TOPHAT_PORT);
         } else {
             /* Neither on the black line */
-
+            p("Both white");
             move_at_velocity(
                 LEFT_MOTOR_PORT, 
                 1000
@@ -177,9 +207,11 @@ void move_forward_until_black_line() {
 
             move_at_velocity(
                 RIGHT_MOTOR_PORT,
-                1000*RIGHT_WHEEL_ADJUSTMENT
+                1000*(is_arm_down ? ARM_DOWN_RIGHT_WHEEL_ADJUSTMENT : RIGHT_WHEEL_ADJUSTMENT)
             );
         }
+
+        msleep(200);
     }
     
     stop();
@@ -202,15 +234,16 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees) {
     );
 
     if (direction == 1) 
-        msleep(13.25*degrees*CLOCKWISE_TURNING_ADJUSTMENT);
+        msleep(13.25*degrees*(is_arm_down ? ARM_DOWN_CLOCKWISE_TURNING_ADJUSTMENT : CLOCKWISE_TURNING_ADJUSTMENT));
     else
-        msleep(13.25*degrees*COUNTER_CLOCKWISE_TURNING_ADJUSTMENT);
+        msleep(13.25*degrees*(is_arm_down ? ARM_DOWN_COUNTER_CLOCKWISE_TURNING_ADJUSTMENT : COUNTER_CLOCKWISE_TURNING_ADJUSTMENT));
 
     stop();
 }
 
 int main()
 {
+
 
     /*wait_for_light(0);
     shut_down_in(119);
@@ -246,7 +279,7 @@ int main()
     // Slide 6
     ////wait_for_button()();
     p("Slide 6");
-    move_linear(-13.1,5);    
+    move_linear(-14,5);    
     
     
     p("Unit 2");
@@ -273,12 +306,7 @@ int main()
     ////wait_for_button()();
     // Slide 9
     p("Slide 9");
-    move_linear(29,5);
-    wait_for_button();
-
-    p("Backing up 4 inches because the pile of poms is too far back.");
-    move_linear(-2, 5);
-    wait_for_button();
+    move_linear(24.5,5);
 
     
     
@@ -287,15 +315,13 @@ int main()
     p("Picking up the first set of poms");
     close_claw();
     raise_arm();
-    wait_for_button();
     
     
     
     // Slide 11
     p("Slide 11");
     p("Move forward a bit to line up with the trays");
-    move_linear(6,5);
-    wait_for_button();
+    move_linear(7.5,5);
     
     
    
@@ -310,7 +336,6 @@ int main()
 	p("Slide 13");
     p("First set: Move toward the trays");
     move_linear(7.5,5);
-    wait_for_button();
     
     
     // Slide 14
@@ -332,14 +357,19 @@ int main()
 
     p("\n\n\n\nGetting the second set of poms, vertical.");
 
-    p("Moving back 7.5 inches to get back on the center line.");
+    p("Moving back 6 inches to get back on the center line.");
     move_linear(-7.5, 5);
 
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board");
     turn(-1, 5, 90);
     wait_for_button();
 
+    p("Back up a bit");
+    move_linear(-1.5, 5);
+    wait_for_button();
+    
     p("Lower the arm");
+    open_claw();
     lower_arm();
     wait_for_button();
 
@@ -347,12 +377,8 @@ int main()
     turn(-1, 5, 26.5);
     wait_for_button();
     
-    p("Move forward 5 inches. This is so that we push the other poms further");
-    move_linear(5, 5);
-    wait_for_button();
-
-    p("Turn 30 degrees CCW to hit the yellow pom");
-    turn(-1, 5, 30);    
+    p("Move forward 2 inches. This is so that we push the other poms further");
+    move_linear(2, 5);
     wait_for_button();
 
     p("Grab all three poms.");
@@ -361,11 +387,11 @@ int main()
     wait_for_button();
 
     p("Turn CW until facing RIGHT. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
-    turn(1, 5, 56.5);
+    turn(1, 5, 32);
     wait_for_button();
 
     p("Adjust left and right position until good. THE REAR OF THE CHASSIS MUST BE 23.63 INCHES FROM THE BLACK TAPE");
-    move_linear(1.26, 5);
+    move_linear(4.76, 5);
     wait_for_button();
 
     p("Turn CW until facing tray. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
@@ -373,7 +399,7 @@ int main()
     wait_for_button();
 
     p("Move towards the tray. PLEASE EDIT THIS NUMBER BASED ON WHAT IS NECESSARY");
-    move_linear(9.7, 5);
+    move_linear(6, 5);
     wait_for_button();
 
     p("Drop the vertical poms");
@@ -396,7 +422,7 @@ int main()
     p("\n\n\n\nGetting the final pom set");
 
     p("Moving back 7.35 inches to get back on the center line. ");
-    move_linear(-7.35, 5);
+    move_linear(-4.85, 5);
     wait_for_button();
 
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board. The right side chassis should be 2 inches south of the center line. If not, adjust the number on line 363");
@@ -409,9 +435,9 @@ int main()
     // Get the rest.
 
 
-    p("Move east for 1.36 inches so that we can reach the orange pom");
-    move_linear(1.36, 5);
-    wait_for_button();
+    // p("Move east for 1.36 inches so that we can reach the orange pom");
+    // move_linear(1.25, 5);
+    // wait_for_button();
 
     p("Get the orange pom");
     open_claw();
@@ -444,13 +470,13 @@ int main()
     raise_arm();
     wait_for_button();
 
-    p("Back up 7 inches.");
-    move_linear(-7, 5);
+    p("Back up 5 inches.");
+    move_linear(-5, 5);
     p("STOP. Ensure that the rear of the chassis is 29 inches away from the black tape. If not, adjust the value above");
     wait_for_button();
 
     p("Turn 90 degrees CW until facing towards the trays");
-    turn(1, 5, 90);
+    turn(1, 5, 117);
     wait_for_button();
 
     p("Move towards the trays");
@@ -473,13 +499,13 @@ int main()
 
     p("\n\n\n\n\nGetting the pickle.");
     
-    p("Move back 13 inches");
+    p("Move back 12 inches");
     p("The robot should be close to touching the north wall by now.");
-    move_linear(-13, 5);
+    move_linear(-12, 5);
     wait_for_button();
 
     p("Rotate to face east.");
-    turn(-1, 5, 90);
+    turn(-1, 5, 140);
     wait_for_button();
 
     p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
