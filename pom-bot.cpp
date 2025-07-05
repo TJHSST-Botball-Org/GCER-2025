@@ -3,6 +3,25 @@
 
 bool is_arm_down = false;
 
+
+// PORTS
+const int ARM_PORT = 0;
+const int CLAW_PORT = 1;
+const int LEFT_MOTOR_PORT = 3;
+const int RIGHT_MOTOR_PORT = 0;
+const int LEFT_TOPHAT_PORT = 2;
+const int RIGHT_TOPHAT_PORT = 0;
+const int LEFT_TOPHAT_THRESHOLD = 3600;
+const int RIGHT_TOPHAT_THRESHOLD = 3600;
+
+// POSITIONS
+const int RAISED_POSITION = 660; //FIX THE NUMBER
+const int FULLY_RAISED = 600; 
+const int HALF_LOWERED = 1770;
+const int LOWERED_POSITION = 2020; //FIX THE NUMBER
+const int CLOSED_POSITION = 800; //FIX THE NUMBER
+const int OPEN_POSITION = 2047; //FIX THE NUMBER
+
 // WHEEL ADJUSTMENTS
 
 // Making it go straight:
