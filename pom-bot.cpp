@@ -30,6 +30,10 @@ const int ARM_PORT = 0;
 const int CLAW_PORT = 1;
 const int LEFT_MOTOR_PORT = 3;
 const int RIGHT_MOTOR_PORT = 0;
+const int LEFT_TOPHAT_PORT = 0;
+const int RIGHT_TOPHAT_PORT = 0;
+const int LEFT_TOPHAT_THRESHOLD = 3000;
+const int RIGHT_TOPHAT_THRESHOLD = 3000;
 
 // POSITIONS
 const int RAISED_POSITION = 660; //FIX THE NUMBER
@@ -41,36 +45,6 @@ const int OPEN_POSITION = 2047; //FIX THE NUMBER
 
 const double PI = 3.141592654;
                                             
-
-
-// const float ADDITIONAL_TURN_PERCENT = 0.01;
-// const float LEFT_TICKS_PER_INCH_TURN = LEFT_TICKS_PER_INCH;
-// const float RIGHT_TICKS_PER_INCH_TURN = RIGHT_TICKS_PER_INCH;
-
-//_____________________________________________________________________________________________
-
-// const double LEFT_TICKS_PER_INCH_BACKWARDS = 237.5;
-// const double RIGHT_TICKS_PER_INCH_BACKWARDS = LEFT_TICKS_PER_INCH_BACKWARDS*1.216;
-
-
-// const double ARM_DOWN_LEFT_TICKS_PER_INCH = LEFT_TICKS_PER_INCH;
-// const double ARM_DOWN_RIGHT_TICKS_PER_INCH = RIGHT_TICKS_PER_INCH;
-
-// const double ARM_DOWN_LEFT_TICKS_PER_INCH_BACKWARDS = LEFT_TICKS_PER_INCH_BACKWARDS;
-// const double ARM_DOWN_RIGHT_TICKS_PER_INCH_BACKWARDS = RIGHT_TICKS_PER_INCH_BACKWARDS;
-
-// //const double TURN_AROUND_LEFT_WHEEL_ARM_RAISED_OFFSET = -140;
-// //const double TURN_AROUND_LEFT_WHEEL_ARM_LOWERED_OFFSET = -70;
-
-// //const double TURN_AROUND_RIGHT_WHEEL_ARM_RAISED_OFFSET = -130;
-// //const double TURN_AROUND_RIGHT_WHEEL_ARM_LOWERED_OFFSET = -140;
-
-// const double TURN_AROUND_LEFT_WHEEL_ARM_RAISED_OFFSET = 0;
-// const double TURN_AROUND_LEFT_WHEEL_ARM_LOWERED_OFFSET = 0;
-
-// const double TURN_AROUND_RIGHT_WHEEL_ARM_RAISED_OFFSET = 0;
-// const double TURN_AROUND_RIGHT_WHEEL_ARM_LOWERED_OFFSET = 0;
-
 void slowly_set_servo_position(int pin, int position, int wait_delay_ms=5) {
     int initial_pos = get_servo_position(pin);
 
@@ -153,6 +127,60 @@ void move_linear(float distance_in_inches, float speed_in_inches_per_sec) {
         msleep(1000*abs(distance_in_inches)*FORWARD_DISTANCE_ADJUSTMENT);
     else
         msleep(1000*abs(distance_in_inches)*BACKWARD_DISTANCE_ADJUSTMENT);
+    
+    stop();
+}
+
+void move_forward_until_black_line() {
+    /* Moves forward until rear tophats align with black tape. 
+    Not 100% accurate, but probably better than nothing. */
+    
+    cmpc(LEFT_MOTOR_PORT);
+    cmpc(RIGHT_MOTOR_PORT);
+
+    move_at_velocity(
+        LEFT_MOTOR_PORT, 
+        1000
+    );
+
+    move_at_velocity(
+        RIGHT_MOTOR_PORT,
+        1000*RIGHT_WHEEL_ADJUSTMENT
+    );
+
+    while (!(analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD && analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
+        // While not BOTH on black line
+
+        if (analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD && !(analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
+            // Only left side on the black line. Move only the right side forward.
+            freeze(LEFT_TOPHAT_PORT)
+
+            move_at_velocity(
+                RIGHT_MOTOR_PORT,
+                1000*RIGHT_WHEEL_ADJUSTMENT
+            );
+        } else if (!(analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD) && (analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
+            // Only right side on the black line. Move only the left side forward.
+            move_at_velocity(
+                LEFT_MOTOR_PORT,
+                1000
+            );
+
+            freeze(RIGHT_TOPHAT_PORT)
+        } else {
+            /* Neither on the black line */
+
+            move_at_velocity(
+                LEFT_MOTOR_PORT, 
+                1000
+            );
+
+            move_at_velocity(
+                RIGHT_MOTOR_PORT,
+                1000*RIGHT_WHEEL_ADJUSTMENT
+            );
+        }
+    }
     
     stop();
 }
@@ -411,7 +439,7 @@ int main()
     turn(-1, 5, 90);
 
     p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
-    // TODO
+    move_forward_until_black_line();
 
     p("Move forward 5.7 inches so that we align with the pickle");
     move_linear(5.7, 5);
@@ -446,7 +474,7 @@ int main()
     turn(-1, 5, 90);
 
     p("Go forward, line up with the black line");
-    // TODO
+    move_forward_until_black_line();
 
     p("Move back 1.45 inches because we gone too far");
     move_linear(-1.45, 5);
@@ -475,7 +503,7 @@ int main()
     turn(-1, 5, 90);
 
     p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
-    // TODO
+    move_forward_until_black_line();
     
     p("Move an extra 1.61 inches to align on the east-west axis with the tomato.");
     move_linear(1.61, 5);
@@ -501,7 +529,7 @@ int main()
     turn(-1, 5, 90);
 
     p("Go forward, line up with the black line");
-    // TODO
+    move_forward_until_black_line();
 
     p("Go forward 4.22 inches to align on the east-west axis");
     move_linear(4.22, 5);
