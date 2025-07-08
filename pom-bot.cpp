@@ -238,6 +238,67 @@ void move_forward_until_black_line() {
     stop();
 }
 
+void move_backwards_until_black_line() {
+    /* Moves backwards until rear tophats align with black tape. 
+    Not 100% accurate, but probably better than nothing. */
+    
+    cmpc(LEFT_MOTOR_PORT);
+    cmpc(RIGHT_MOTOR_PORT);
+
+    move_at_velocity(
+        LEFT_MOTOR_PORT, 
+        -1300
+    );
+
+    move_at_velocity(
+        RIGHT_MOTOR_PORT,
+        -1300*(is_arm_down ? ARM_DOWN_FORWARD_RIGHT_WHEEL_ADJUSTMENT : FORWARD_RIGHT_WHEEL_ADJUSTMENT)
+    );
+
+    while (!(analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD && analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
+        // While not BOTH on black line
+
+        if (analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD && !(analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
+            p("Right white");
+            
+            // Only left side on the black line. Move only the right side forward.
+            freeze(LEFT_MOTOR_PORT);
+
+            move_at_velocity(
+                RIGHT_MOTOR_PORT,
+                -1300*(is_arm_down ? ARM_DOWN_FORWARD_RIGHT_WHEEL_ADJUSTMENT : FORWARD_RIGHT_WHEEL_ADJUSTMENT)
+            );
+        } else if (!(analog(LEFT_TOPHAT_PORT) > LEFT_TOPHAT_THRESHOLD) && (analog(RIGHT_TOPHAT_PORT) > RIGHT_TOPHAT_THRESHOLD)) {
+            p("Left white");    
+
+            // Only right side on the black line. Move only the left side forward.
+            move_at_velocity(
+                LEFT_MOTOR_PORT, 
+                -1300
+            );
+
+            freeze(RIGHT_TOPHAT_PORT);
+        } else {
+            /* Neither on the black line */
+            p("Both white");
+            move_at_velocity(
+                LEFT_MOTOR_PORT, 
+                -1300
+            );
+
+            move_at_velocity(
+                RIGHT_MOTOR_PORT,
+                -1300*(is_arm_down ? ARM_DOWN_FORWARD_RIGHT_WHEEL_ADJUSTMENT : FORWARD_RIGHT_WHEEL_ADJUSTMENT)
+            );
+        }
+
+        msleep(200);
+    }
+    
+    stop();
+}
+
+
 void turn(float direction, float speed_in_inches_per_sec, float degrees) { 
     /* Direction is 1 or -1, 1 for clockwise, -1 for counter-c */
 
@@ -361,7 +422,7 @@ int main()
     // Slide 13
 	p("Slide 13");
     p("First set: Move toward the trays");
-    move_linear(6,5);
+    move_linear(8,5);
     
     
     // Slide 14
@@ -384,7 +445,8 @@ int main()
     p("\n\n\n\nGetting the second set of poms, vertical.");
 
     p("Moving back 5.5 inches to get back on the center line.");
-    move_linear(-5.5, 5);
+    //move_linear(-5.5, 5); //ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+    move_backwards_until_black_line();
 
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board");
     turn(-1, 5, 90);
@@ -425,7 +487,7 @@ int main()
     //wait_for_button();SWAG();
 
     p("Move towards the tray. PLEASE EDIT THIS NUMBER BASED ON WHAT IS NECESSARY");
-    move_linear(6, 5);
+    move_linear(8, 5);
     //wait_for_button();SWAG();
 
     p("Drop the vertical poms");
@@ -448,7 +510,8 @@ int main()
     p("\n\n\n\nGetting the final pom set");
 
     p("Moving back 7.35 inches to get back on the center line. ");
-    move_linear(-5.25, 5);
+    //move_linear(-5.25, 5);
+    move_backwards_until_black_line();
     //wait_for_button();SWAG();
 
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board. The right side chassis should be 2 inches south of the center line. If not, adjust the number on line 363");
@@ -486,7 +549,7 @@ int main()
     //wait_for_button();SWAG();
 
     p("Move towards the trays");
-    move_linear(7.5, 5);
+    move_linear(9.5, 5);
     //wait_for_button();SWAG();
 
     p("Drop the last set poms poms");
@@ -507,7 +570,7 @@ int main()
     
     p("Move back 12 inches");
     p("The robot should be close to touching the north wall by now.");
-    move_linear(-12, 5);
+    move_linear(-12, 5); //FOX THIS PART
     //wait_for_button();SWAG();
 
     p("Rotate to face east.");
