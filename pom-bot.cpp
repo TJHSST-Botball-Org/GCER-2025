@@ -56,7 +56,7 @@ const float ARM_DOWN_BACKWARD_DISTANCE_ADJUSTMENT = 0.119992171; // Make robot m
 
 // Making it turn the right amount
 // Make the robot turn 90 degrees. Adjust values accordingly
-const float CLOCKWISE_TURNING_ADJUSTMENT = 0.645; // Turn too much --> decrease value
+const float CLOCKWISE_TURNING_ADJUSTMENT = 0.64; // Turn too much --> decrease value
                                               // Turn too little --> decrease value
 
 const float COUNTER_CLOCKWISE_TURNING_ADJUSTMENT = 0.65; // Turn too much --> decrease value
@@ -326,8 +326,6 @@ void turn(float direction, float speed_in_inches_per_sec, float degrees) {
 
 int main()
 {
-   
-    
  
     
     enable_servos();
@@ -422,7 +420,7 @@ int main()
     // Slide 13
 	p("Slide 13");
     p("First set: Move toward the trays");
-    move_linear(8,5);
+    move_linear(10,5);
     
     
     // Slide 14
@@ -446,7 +444,9 @@ int main()
 
     p("Moving back 5.5 inches to get back on the center line.");
     //move_linear(-5.5, 5); //ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-    move_backwards_until_black_line();
+    move_linear(-14, 5);
+    msleep(250);
+    move_linear(5.7, 5);
 
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board");
     turn(-1, 5, 90);
@@ -462,7 +462,7 @@ int main()
     //wait_for_button();SWAG();
 
     p("Sweep 26.5 degrees counter clockwise to get the red pom");
-    turn(-1, 2.5, 60);
+    turn(-1, 2.5, 100); //_,_,60
     //wait_for_button();SWAG();
     
     p("Move forward 2 inches. This is so that we push the other poms further");
@@ -475,7 +475,7 @@ int main()
     //wait_for_button();SWAG();
 
     p("Turn CW until facing RIGHT. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
-    turn(1, 5, 30);
+    turn(1, 5, 50); //_,_,30
     //wait_for_button();SWAG();
 
     p("Adjust left and right position until good. THE REAR OF THE CHASSIS MUST BE 23.63 INCHES FROM THE BLACK TAPE");
@@ -509,9 +509,11 @@ int main()
 
     p("\n\n\n\nGetting the final pom set");
 
-    p("Moving back 7.35 inches to get back on the center line. ");
-    //move_linear(-5.25, 5);
-    move_backwards_until_black_line();
+    move_linear(-14, 5);
+    msleep(250);
+    move_linear(5.7, 5);
+    //move_backwards_until_black_line();
+    //move_linear(-4.25,5);
     //wait_for_button();SWAG();
 
     p("Rotate 90 degrees counter clockwise so that we are facing the right side of the board. The right side chassis should be 2 inches south of the center line. If not, adjust the number on line 363");
@@ -584,7 +586,14 @@ int main()
     p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
     move_forward_until_black_line();
 
-    msleep(15000);
+    p("Move forward 5 inches to align east-west with the pickle");
+    move_linear(5, 5);
+
+	p("Turn towards north.");
+    turn(-1, 5, 90);
+    
+    return 0;
+    
 
     //wait_for_button();SWAG();
 
