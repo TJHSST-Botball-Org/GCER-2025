@@ -6,7 +6,7 @@ bool is_arm_down = false;
 
 // PORTS
 const int ARM_PORT = 0;
-const int CLAW_PORT = 1;
+const int CLAW_PORT = 3;
 const int LEFT_MOTOR_PORT = 3;
 const int RIGHT_MOTOR_PORT = 0;
 const int LEFT_TOPHAT_PORT = 2;
@@ -16,7 +16,7 @@ const int RIGHT_TOPHAT_THRESHOLD = 3900;
 
 // POSITIONS
 const int RAISED_POSITION = 1351; //FIX THE NUMBER
-const int FULLY_RAISED = 600; 
+const int FULLY_RAISED = 300; 
 const int HALF_LOWERED = 1770;
 const int LOWERED_POSITION = 2020; //FIX THE NUMBER
 const int CLOSED_POSITION = 800; //FIX THE NUMBER
@@ -329,8 +329,8 @@ int main()
  
     
     enable_servos();
-
-    //wait_for_light(5);
+	fully_raise_arm();
+    wait_for_light(5);
     shut_down_in(119);
 
  	//disable_servo(0);
@@ -453,7 +453,7 @@ int main()
     //wait_for_button();SWAG();
 
     p("Back up a bit");
-    move_linear(-1.5, 5);
+    move_linear(-3.5, 5);
     //wait_for_button();SWAG();
     
     p("Lower the arm");
@@ -462,11 +462,11 @@ int main()
     //wait_for_button();SWAG();
 
     p("Sweep 26.5 degrees counter clockwise to get the red pom");
-    turn(-1, 2.5, 100); //_,_,60
+    turn(-1, 2.5, 85); //_,_,60
     //wait_for_button();SWAG();
     
     p("Move forward 2 inches. This is so that we push the other poms further");
-    move_linear(2, 5);
+    move_linear(3, 5);
     //wait_for_button();SWAG();
 
     p("Grab all three poms.");
@@ -475,11 +475,11 @@ int main()
     //wait_for_button();SWAG();
 
     p("Turn CW until facing RIGHT. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
-    turn(1, 5, 50); //_,_,30
+    turn(1, 5, 40); //_,_,30
     //wait_for_button();SWAG();
 
     p("Adjust left and right position until good. THE REAR OF THE CHASSIS MUST BE 23.63 INCHES FROM THE BLACK TAPE");
-    move_linear(6, 5);
+    move_linear(4, 5);
     //wait_for_button();SWAG();
 
     p("Turn CW until facing tray. PLEASE EDIT THIS NUMBER TO HOW MUCH IS NECESSARY");
@@ -509,7 +509,7 @@ int main()
 
     p("\n\n\n\nGetting the final pom set");
 
-    move_linear(-14, 5);
+    move_linear(-12, 5);
     msleep(250);
     move_linear(5.7, 5);
     //move_backwards_until_black_line();
@@ -533,8 +533,12 @@ int main()
     open_claw();
     lower_arm();
 
-    move_linear(7+5, 5);
+    move_linear(14, 5);
     //wait_for_button();SWAG();
+    
+
+    // move back a bit
+    move_linear(-2, 5);
 
     p("Grab the poms.");
     close_claw();
@@ -542,7 +546,7 @@ int main()
     //wait_for_button();SWAG();
  
     p("Back up 5 inches.");
-    move_linear(-5, 5);
+    move_linear(2.5, 5);
     // p("STOP. Ensure that the rear of the chassis is 29 inches away from the black tape. If not, adjust the value above");
     // //wait_for_button();SWAG();
 
@@ -591,43 +595,17 @@ int main()
 
 	p("Turn towards north.");
     turn(-1, 5, 90);
+    
+    move_linear(6, 5);
+
+    move_linear(-2.5, 5);
 
     open_claw();
     lower_arm();
-    
-    return 0;
-    
-
-    //wait_for_button();SWAG();
-
-    p("Move forward 5.7 inches so that we align with the pickle");
-    move_linear(4.25, 5);
-    //wait_for_button();SWAG();
-
-    p("Turn towards north.");
-    turn(-1, 5, 90);
-
-    
-    //wait_for_button();SWAG();
-
-    //p("Move forward 2.5 inches until we can get the pickle.");
-    move_linear(1.5, 5);
-    //wait_for_button();SWAG();
-
-    p("Get the pickle");
-    open_claw();
-    //wait_for_button();SWAG();
-
-    lower_arm();
-    return 0;
-    p("STOP. Is the claw aligned? How much more do we need to move?");
-    //wait_for_button();SWAG();
 
     close_claw();
-    //wait_for_button();SWAG();
-
     raise_arm();
-    //wait_for_button();SWAG();
+    
 
     // The plan now is to
     // 1. Back up 2.63 inches so that we don't hit the north wall when we rotate later
@@ -667,8 +645,6 @@ int main()
 
 
 
-
-
     p("Getting the tomato");
 
     p("Move back 12 inches");
@@ -683,10 +659,12 @@ int main()
     p("Move forward until color sensors align with center line. Rear should be roughly on the LEFT EDGE of the black line at this point");
     move_forward_until_black_line();
     //wait_for_button();SWAG();
-    
+
     p("Move an extra 1.61 inches to align on the east-west axis with the tomato.");
     move_linear(1.61, 5);
     //wait_for_button();SWAG();
+
+    return 0;
     
     p("Turn north");
     turn(-1, 5, 90);
