@@ -591,6 +591,9 @@ int main()
 
 	p("Turn towards north.");
     turn(-1, 5, 90);
+
+    open_claw();
+    lower_arm();
     
     return 0;
     
