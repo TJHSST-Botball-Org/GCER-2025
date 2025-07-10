@@ -393,6 +393,8 @@ int main()
     p("Slide 9");
     move_linear(25.5,5);
 
+    move_linear(-2, 5);
+
     
     
     // Slide 10
@@ -406,7 +408,7 @@ int main()
     // Slide 11
     p("Slide 11");
     p("Move forward a bit to line up with the trays");
-    move_linear(7.5,5);
+    move_linear(7.5+2,5);
     
     
    
@@ -538,7 +540,7 @@ int main()
     
 
     // move back a bit
-    move_linear(-2, 5);
+    move_linear(-1.5, 5);
 
     p("Grab the poms.");
     close_claw();
@@ -570,7 +572,7 @@ int main()
     close_claw();
     //wait_for_button();SWAG();
 
-
+    
 
     p("\n\n\n\n\nGetting the pickle.");
     
@@ -582,6 +584,8 @@ int main()
     p("Rotate to face east.");
     turn(-1, 5, 90);
     //wait_for_button();SWAG();
+
+    msleep(2000);
 
     p("Move back 5 inches");
     p("The robot should be close to touching the north wall by now.");
@@ -598,13 +602,17 @@ int main()
     
     move_linear(6, 5);
 
-    move_linear(-2.5, 5);
+    move_linear(-2.2, 5);
 
     open_claw();
     lower_arm();
 
     close_claw();
     raise_arm();
+
+    return 0;
+
+    msleep(8000);
     
 
     // The plan now is to
